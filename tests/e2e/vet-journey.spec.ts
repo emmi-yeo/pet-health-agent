@@ -16,7 +16,7 @@ const OWNER_EMAIL = "pawlog.e2e@test.local";
 const OWNER_PASSWORD = "PawLogTest2026!";
 const VET_EMAIL = "pawlog.vet@test.local";
 const VET_PASSWORD = "PawLogVet2026!";
-const API = "http://localhost:8000";
+const API = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 

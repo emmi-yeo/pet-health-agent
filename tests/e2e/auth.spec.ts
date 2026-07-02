@@ -42,6 +42,9 @@ test.describe("Auth Page", () => {
   });
 
   test("PawLog logo links back to home", async ({ page }) => {
+    // Logo link is mobile-only (lg:hidden) — use mobile viewport
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/auth");
     await page.getByRole("link", { name: /pawlog/i }).click();
     await expect(page).toHaveURL("/");
   });

@@ -20,13 +20,13 @@ test.describe("Landing Page", () => {
     await expect(page.getByRole("link", { name: /get started free/i })).toBeVisible();
   });
 
-  test("displays all 6 feature cards", async ({ page }) => {
+  test("displays feature cards for owners and vets", async ({ page }) => {
     await expect(page.getByText("AI Pattern Detection")).toBeVisible();
     await expect(page.getByText("Vet Visit Summaries")).toBeVisible();
     await expect(page.getByText("Daily Health Logs")).toBeVisible();
     await expect(page.getByText("Medication Tracking")).toBeVisible();
-    await expect(page.getByText("Private & Secure")).toBeVisible();
-    await expect(page.getByText("Multi-Pet Support")).toBeVisible();
+    await expect(page.getByText("Secure Sharing")).toBeVisible();
+    await expect(page.getByText("Clinical Notes")).toBeVisible();
   });
 
   test("displays all 4 how-it-works steps", async ({ page }) => {
