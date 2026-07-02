@@ -26,7 +26,7 @@ test.describe("Landing Page", () => {
     await expect(page.getByText("Daily Health Logs")).toBeVisible();
     await expect(page.getByText("Medication Tracking")).toBeVisible();
     await expect(page.getByText("Secure Sharing")).toBeVisible();
-    await expect(page.getByText("Clinical Notes")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Clinical Notes" })).toBeVisible();
   });
 
   test("displays all 4 how-it-works steps", async ({ page }) => {

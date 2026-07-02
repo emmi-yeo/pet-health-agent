@@ -24,7 +24,8 @@ test.describe("Smoke Tests", () => {
 
   test("unauthenticated /pets/new redirects to /auth", async ({ page }) => {
     await page.goto("/pets/new");
-    await expect(page).toHaveURL(/\/auth/);
+    // Client-side auth check in useEffect needs extra time (Supabase round-trip)
+    await expect(page).toHaveURL(/\/auth/, { timeout: 15_000 });
   });
 
   test("landing page has no broken main layout", async ({ page }) => {

@@ -29,13 +29,14 @@ async function getFirstPetId(page: any): Promise<string | null> {
 test.describe("Dark mode toggle", () => {
   test("dark mode toggle button is present in nav", async ({ page }) => {
     await signIn(page);
-    const toggle = page.locator('[aria-label="Toggle dark mode"]');
+    // Nav renders toggle twice (desktop + mobile menu) — target the first (desktop)
+    const toggle = page.locator('[aria-label="Toggle dark mode"]').first();
     await expect(toggle).toBeVisible({ timeout: 8_000 });
   });
 
   test("clicking dark mode toggle adds dark class to html", async ({ page }) => {
     await signIn(page);
-    const toggle = page.locator('[aria-label="Toggle dark mode"]');
+    const toggle = page.locator('[aria-label="Toggle dark mode"]').first();
     await toggle.click();
     const htmlClass = await page.evaluate(() => document.documentElement.classList.contains("dark"));
     expect(htmlClass).toBe(true);
@@ -43,7 +44,7 @@ test.describe("Dark mode toggle", () => {
 
   test("clicking dark mode toggle twice returns to light mode", async ({ page }) => {
     await signIn(page);
-    const toggle = page.locator('[aria-label="Toggle dark mode"]');
+    const toggle = page.locator('[aria-label="Toggle dark mode"]').first();
     await toggle.click();
     await toggle.click();
     const htmlClass = await page.evaluate(() => document.documentElement.classList.contains("dark"));
@@ -52,7 +53,7 @@ test.describe("Dark mode toggle", () => {
 
   test("dark mode preference persists after navigation", async ({ page }) => {
     await signIn(page);
-    const toggle = page.locator('[aria-label="Toggle dark mode"]');
+    const toggle = page.locator('[aria-label="Toggle dark mode"]').first();
     await toggle.click();
     const isDark = await page.evaluate(() => document.documentElement.classList.contains("dark"));
     expect(isDark).toBe(true);
@@ -60,13 +61,12 @@ test.describe("Dark mode toggle", () => {
     const stillDark = await page.evaluate(() => document.documentElement.classList.contains("dark"));
     expect(stillDark).toBe(true);
     // Reset to light for other tests
-    const toggle2 = page.locator('[aria-label="Toggle dark mode"]');
-    await toggle2.click();
+    await page.locator('[aria-label="Toggle dark mode"]').first().click();
   });
 
   test("dark mode icon changes between Sun and Moon", async ({ page }) => {
     await signIn(page);
-    const toggle = page.locator('[aria-label="Toggle dark mode"]');
+    const toggle = page.locator('[aria-label="Toggle dark mode"]').first();
     const initialTitle = await toggle.getAttribute("title");
     await toggle.click();
     const afterTitle = await toggle.getAttribute("title");
@@ -161,10 +161,11 @@ test.describe("Co-owner invite section", () => {
 
   test("co-owner endpoint returns 404 for bad token (API contract via fetch)", async ({ page }) => {
     await signIn(page);
-    const res = await page.evaluate(async () => {
-      const r = await fetch("http://localhost:8000/api/accept-co-owner?token=no-such-token-xyz");
+    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const res = await page.evaluate(async (apiBase) => {
+      const r = await fetch(`${apiBase}/api/accept-co-owner?token=no-such-token-xyz`);
       return r.status;
-    });
+    }, base);
     expect(res).toBe(404);
   });
 });
@@ -238,23 +239,25 @@ test.describe("Lab results tab", () => {
 test.describe("Vet verified badge API", () => {
   test("admin verify endpoint returns 403 without secret", async ({ page }) => {
     await signIn(page);
-    const res = await page.evaluate(async () => {
-      const r = await fetch("http://localhost:8000/api/admin/verify-vet", {
+    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const res = await page.evaluate(async (apiBase) => {
+      const r = await fetch(`${apiBase}/api/admin/verify-vet`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ vet_id: "00000000-0000-0000-0000-000000000000" }),
       });
       return r.status;
-    });
+    }, base);
     expect(res).toBe(403);
   });
 
   test("verify status endpoint returns 401 without auth", async ({ page }) => {
     await signIn(page);
-    const res = await page.evaluate(async () => {
-      const r = await fetch("http://localhost:8000/api/vet/verify-status");
+    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const res = await page.evaluate(async (apiBase) => {
+      const r = await fetch(`${apiBase}/api/vet/verify-status`);
       return r.status;
-    });
+    }, base);
     expect(res).toBe(401);
   });
 });

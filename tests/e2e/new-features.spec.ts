@@ -23,8 +23,9 @@ test.describe("Auth — role selection on signup", () => {
   test("signup tab shows role radio buttons", async ({ page }) => {
     await page.goto("/auth");
     await page.getByRole("button", { name: /create account/i }).click();
-    await expect(page.getByText(/pet owner/i)).toBeVisible();
-    await expect(page.getByText(/veterinarian/i)).toBeVisible();
+    // Use radio role to avoid matching the always-visible demo account buttons
+    await expect(page.getByRole("radio", { name: /pet owner/i })).toBeVisible();
+    await expect(page.getByRole("radio", { name: /veterinarian/i })).toBeVisible();
   });
 
   test("selecting vet role shows clinic name field", async ({ page }) => {
