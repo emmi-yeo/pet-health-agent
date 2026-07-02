@@ -4,6 +4,7 @@ config({ path: ".env.local" });
 
 export default defineConfig({
   testDir: "./tests",
+  testIgnore: ["**/._*"],
   timeout: 30000,
   retries: 1,
   use: {

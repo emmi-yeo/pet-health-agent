@@ -326,41 +326,45 @@ test.describe("Medication interaction checker", () => {
 test.describe("New API endpoints — auth required (via fetch)", () => {
   test("appointments API requires auth", async ({ page }) => {
     await signIn(page);
-    const res = await page.evaluate(async () => {
-      const r = await fetch("http://localhost:8000/api/pets/fake-id/appointments");
+    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const res = await page.evaluate(async (apiBase) => {
+      const r = await fetch(`${apiBase}/api/pets/fake-id/appointments`);
       return r.status;
-    });
+    }, base);
     expect(res).toBe(401);
   });
 
   test("vaccinations API requires auth", async ({ page }) => {
     await signIn(page);
-    const res = await page.evaluate(async () => {
-      const r = await fetch("http://localhost:8000/api/pets/fake-id/vaccinations");
+    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const res = await page.evaluate(async (apiBase) => {
+      const r = await fetch(`${apiBase}/api/pets/fake-id/vaccinations`);
       return r.status;
-    });
+    }, base);
     expect(res).toBe(401);
   });
 
   test("chat API requires auth", async ({ page }) => {
     await signIn(page);
-    const res = await page.evaluate(async () => {
-      const r = await fetch("http://localhost:8000/api/pets/fake-id/chat", {
+    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const res = await page.evaluate(async (apiBase) => {
+      const r = await fetch(`${apiBase}/api/pets/fake-id/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: "test" }),
       });
       return r.status;
-    });
+    }, base);
     expect(res).toBe(401);
   });
 
   test("export API requires auth", async ({ page }) => {
     await signIn(page);
-    const res = await page.evaluate(async () => {
-      const r = await fetch("http://localhost:8000/api/pets/fake-id/export");
+    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const res = await page.evaluate(async (apiBase) => {
+      const r = await fetch(`${apiBase}/api/pets/fake-id/export`);
       return r.status;
-    });
+    }, base);
     expect(res).toBe(401);
   });
 });
