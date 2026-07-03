@@ -58,9 +58,11 @@ app = FastAPI(title="PawLog API", version="1.0.0")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
+_cors_origins = [o.strip() for o in os.getenv("FRONTEND_URL", "http://localhost:3000").split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[os.getenv("FRONTEND_URL", "http://localhost:3000")],
+    allow_origins=_cors_origins,
+    allow_origin_regex=r"https://pet-health-agent[^.]*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
