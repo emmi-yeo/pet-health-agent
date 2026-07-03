@@ -322,49 +322,30 @@ test.describe("Medication interaction checker", () => {
 });
 
 // ── New backend endpoints — auth contract ─────────────────────────────────────
+// Use Playwright's request fixture (Node.js level) to avoid browser CORS/CSP
+
+const API_BASE = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
 
 test.describe("New API endpoints — auth required (via fetch)", () => {
-  test("appointments API requires auth", async ({ page }) => {
-    await signIn(page);
-    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
-    const res = await page.evaluate(async (apiBase) => {
-      const r = await fetch(`${apiBase}/api/pets/fake-id/appointments`);
-      return r.status;
-    }, base);
-    expect(res).toBe(401);
+  test("appointments API requires auth", async ({ request }) => {
+    const res = await request.get(`${API_BASE}/api/pets/fake-id/appointments`);
+    expect(res.status()).toBe(401);
   });
 
-  test("vaccinations API requires auth", async ({ page }) => {
-    await signIn(page);
-    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
-    const res = await page.evaluate(async (apiBase) => {
-      const r = await fetch(`${apiBase}/api/pets/fake-id/vaccinations`);
-      return r.status;
-    }, base);
-    expect(res).toBe(401);
+  test("vaccinations API requires auth", async ({ request }) => {
+    const res = await request.get(`${API_BASE}/api/pets/fake-id/vaccinations`);
+    expect(res.status()).toBe(401);
   });
 
-  test("chat API requires auth", async ({ page }) => {
-    await signIn(page);
-    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
-    const res = await page.evaluate(async (apiBase) => {
-      const r = await fetch(`${apiBase}/api/pets/fake-id/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: "test" }),
-      });
-      return r.status;
-    }, base);
-    expect(res).toBe(401);
+  test("chat API requires auth", async ({ request }) => {
+    const res = await request.post(`${API_BASE}/api/pets/fake-id/chat`, {
+      data: { message: "test" },
+    });
+    expect(res.status()).toBe(401);
   });
 
-  test("export API requires auth", async ({ page }) => {
-    await signIn(page);
-    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
-    const res = await page.evaluate(async (apiBase) => {
-      const r = await fetch(`${apiBase}/api/pets/fake-id/export`);
-      return r.status;
-    }, base);
-    expect(res).toBe(401);
+  test("export API requires auth", async ({ request }) => {
+    const res = await request.get(`${API_BASE}/api/pets/fake-id/export`);
+    expect(res.status()).toBe(401);
   });
 });

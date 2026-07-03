@@ -159,14 +159,10 @@ test.describe("Co-owner invite section", () => {
     await expect(page.getByRole("button", { name: /^invite$/i })).toBeVisible({ timeout: 8_000 });
   });
 
-  test("co-owner endpoint returns 404 for bad token (API contract via fetch)", async ({ page }) => {
-    await signIn(page);
+  test("co-owner endpoint returns 404 for bad token (API contract via fetch)", async ({ request }) => {
     const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
-    const res = await page.evaluate(async (apiBase) => {
-      const r = await fetch(`${apiBase}/api/accept-co-owner?token=no-such-token-xyz`);
-      return r.status;
-    }, base);
-    expect(res).toBe(404);
+    const res = await request.get(`${base}/api/accept-co-owner?token=no-such-token-xyz`);
+    expect(res.status()).toBe(404);
   });
 });
 
@@ -222,44 +218,28 @@ test.describe("Lab results tab", () => {
     await expect(page.locator('input[type="file"]')).not.toBeVisible();
   });
 
-  test("lab results API requires auth", async ({ page }) => {
-    await signIn(page);
-    const petId = await getFirstPetId(page);
-    if (!petId) test.skip();
-    const apiBase = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
-    const res = await page.evaluate(async ([pid, base]) => {
-      const r = await fetch(`${base}/api/pets/${pid}/lab-results`);
-      return r.status;
-    }, [petId, apiBase] as [string, string]);
-    expect(res).toBe(401);
+  test("lab results API requires auth", async ({ request }) => {
+    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const res = await request.get(`${base}/api/pets/fake-id/lab-results`);
+    expect(res.status()).toBe(401);
   });
 });
 
 // ── Vet verified badge ─────────────────────────────────────────────────────────
 
 test.describe("Vet verified badge API", () => {
-  test("admin verify endpoint returns 403 without secret", async ({ page }) => {
-    await signIn(page);
+  test("admin verify endpoint returns 403 without secret", async ({ request }) => {
     const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
-    const res = await page.evaluate(async (apiBase) => {
-      const r = await fetch(`${apiBase}/api/admin/verify-vet`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ vet_id: "00000000-0000-0000-0000-000000000000" }),
-      });
-      return r.status;
-    }, base);
-    expect(res).toBe(403);
+    const res = await request.post(`${base}/api/admin/verify-vet`, {
+      data: { vet_id: "00000000-0000-0000-0000-000000000000" },
+    });
+    expect(res.status()).toBe(403);
   });
 
-  test("verify status endpoint returns 401 without auth", async ({ page }) => {
-    await signIn(page);
+  test("verify status endpoint returns 401 without auth", async ({ request }) => {
     const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
-    const res = await page.evaluate(async (apiBase) => {
-      const r = await fetch(`${apiBase}/api/vet/verify-status`);
-      return r.status;
-    }, base);
-    expect(res).toBe(401);
+    const res = await request.get(`${base}/api/vet/verify-status`);
+    expect(res.status()).toBe(401);
   });
 });
 
