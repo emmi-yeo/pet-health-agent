@@ -269,11 +269,11 @@ test.describe("Regression — existing features intact", () => {
     const petId = await getFirstPetId(page);
     if (!petId) test.skip();
     await page.goto(`/pets/${petId}`);
-    await expect(page.getByRole("tab", { name: /health logs/i })).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByRole("tab", { name: /medications/i })).toBeVisible();
-    await expect(page.getByRole("tab", { name: /appointments/i })).toBeVisible();
+    await expect(page.getByRole("tab", { name: /^logs|health logs/i })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("tab", { name: /^meds|medications/i })).toBeVisible();
+    await expect(page.getByRole("tab", { name: /appts?|appointments/i })).toBeVisible();
     await expect(page.getByRole("tab", { name: /vaccines/i })).toBeVisible();
-    await expect(page.getByRole("tab", { name: /vet visits/i })).toBeVisible();
+    await expect(page.getByRole("tab", { name: /visits?|vet visits/i })).toBeVisible();
     await expect(page.getByRole("tab", { name: /vet notes/i })).toBeVisible();
     await expect(page.getByRole("tab", { name: /ai summaries/i })).toBeVisible();
     await expect(page.getByRole("tab", { name: /labs/i })).toBeVisible();
@@ -284,7 +284,7 @@ test.describe("Regression — existing features intact", () => {
     const petId = await getFirstPetId(page);
     if (!petId) test.skip();
     await page.goto(`/pets/${petId}/share`);
-    await expect(page.getByText(/send invite/i)).toBeVisible({ timeout: 8_000 });
+    await expect(page.getByRole("heading", { name: /send invite/i })).toBeVisible({ timeout: 8_000 });
     await expect(page.getByText(/read-only share links/i)).toBeVisible();
     await expect(page.getByText(/co-owner access/i)).toBeVisible();
   });

@@ -36,7 +36,7 @@ test.describe("Pet profile — new tabs", () => {
     const petId = await getFirstPetId(page);
     if (!petId) test.skip();
     await page.goto(`/pets/${petId}`);
-    await expect(page.getByRole("tab", { name: /appointments/i })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("tab", { name: /appts?|appointments/i })).toBeVisible({ timeout: 10_000 });
   });
 
   test("vaccinations tab is visible on pet profile", async ({ page }) => {
@@ -52,7 +52,7 @@ test.describe("Pet profile — new tabs", () => {
     const petId = await getFirstPetId(page);
     if (!petId) test.skip();
     await page.goto(`/pets/${petId}`);
-    await expect(page.getByRole("tab", { name: /vet visits/i })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("tab", { name: /visits?|vet visits/i })).toBeVisible({ timeout: 10_000 });
   });
 
   test("clicking appointments tab shows schedule button", async ({ page }) => {
@@ -60,7 +60,7 @@ test.describe("Pet profile — new tabs", () => {
     const petId = await getFirstPetId(page);
     if (!petId) test.skip();
     await page.goto(`/pets/${petId}`);
-    await page.getByRole("tab", { name: /appointments/i }).click();
+    await page.getByRole("tab", { name: /appts?|appointments/i }).click();
     await expect(page.getByRole("button", { name: /schedule/i })).toBeVisible({ timeout: 8_000 });
   });
 
@@ -78,7 +78,7 @@ test.describe("Pet profile — new tabs", () => {
     const petId = await getFirstPetId(page);
     if (!petId) test.skip();
     await page.goto(`/pets/${petId}`);
-    await page.getByRole("tab", { name: /vet visits/i }).click();
+    await page.getByRole("tab", { name: /visits?|vet visits/i }).click();
     await expect(page.getByRole("button", { name: /log visit/i })).toBeVisible({ timeout: 8_000 });
   });
 });
@@ -91,7 +91,7 @@ test.describe("Appointment scheduling", () => {
     const petId = await getFirstPetId(page);
     if (!petId) test.skip();
     await page.goto(`/pets/${petId}`);
-    await page.getByRole("tab", { name: /appointments/i }).click();
+    await page.getByRole("tab", { name: /appts?|appointments/i }).click();
     await page.getByRole("button", { name: /schedule/i }).click();
     await expect(page.locator("label").filter({ hasText: /date/i }).first()).toBeVisible();
     await expect(page.getByRole("button", { name: /save/i })).toBeVisible();
@@ -103,7 +103,7 @@ test.describe("Appointment scheduling", () => {
     const petId = await getFirstPetId(page);
     if (!petId) test.skip();
     await page.goto(`/pets/${petId}`);
-    await page.getByRole("tab", { name: /appointments/i }).click();
+    await page.getByRole("tab", { name: /appts?|appointments/i }).click();
     await page.getByRole("button", { name: /schedule/i }).click();
     await page.getByRole("button", { name: /cancel/i }).click();
     await expect(page.getByRole("button", { name: /save/i })).not.toBeVisible();
@@ -143,7 +143,7 @@ test.describe("Vet visit log", () => {
     const petId = await getFirstPetId(page);
     if (!petId) test.skip();
     await page.goto(`/pets/${petId}`);
-    await page.getByRole("tab", { name: /vet visits/i }).click();
+    await page.getByRole("tab", { name: /visits?|vet visits/i }).click();
     await page.getByRole("button", { name: /log visit/i }).click();
     await expect(page.getByLabel(/visit date/i)).toBeVisible({ timeout: 5_000 });
     await expect(page.getByLabel(/notes/i).first()).toBeVisible();
@@ -175,7 +175,7 @@ test.describe("QR code page", () => {
     const petId = await getFirstPetId(page);
     if (!petId) test.skip();
     await page.goto(`/pets/${petId}/qr`);
-    await expect(page.getByText(/qr code/i)).toBeVisible({ timeout: 8_000 });
+    await expect(page.getByRole("heading", { name: /qr code/i })).toBeVisible({ timeout: 8_000 });
   });
 
   test("QR page renders a canvas element", async ({ page }) => {
@@ -213,7 +213,7 @@ test.describe("AI chat page", () => {
     const petId = await getFirstPetId(page);
     if (!petId) test.skip();
     await page.goto(`/pets/${petId}/chat`);
-    await expect(page.getByText(/symptoms/i).or(page.getByText(/patterns/i))).toBeVisible({ timeout: 8_000 });
+    await expect(page.getByText(/symptoms/i).or(page.getByText(/patterns/i)).first()).toBeVisible({ timeout: 8_000 });
   });
 
   test("send button is disabled when input is empty", async ({ page }) => {
