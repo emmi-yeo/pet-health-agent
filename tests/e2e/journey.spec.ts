@@ -23,7 +23,7 @@ const TEST_EMAIL = "pawlog.e2e@test.local";
 const TEST_PASSWORD = "PawLogTest2026!";
 const PET_NAME = "Bella";
 
-test.setTimeout(300_000); // 5 minutes total — AI pipeline can be slow
+test.setTimeout(480_000); // 8 minutes total — AI pipeline on Render free tier can take 200-300s
 
 test("complete user journey — sign in to vet summary", async ({ page, context }) => {
   let petId = "";
@@ -89,8 +89,8 @@ test("complete user journey — sign in to vet summary", async ({ page, context 
 
     await page.getByRole("button", { name: /save log/i }).click();
 
-    // AI pipeline runs — waits for redirect back to pet profile (up to 150s on Render cold start)
-    await page.waitForURL(/\/pets\/[a-f0-9-]{36}$/, { timeout: 150_000 });
+    // AI pipeline runs — waits for redirect back to pet profile (up to 280s; client polls for 300s)
+    await page.waitForURL(/\/pets\/[a-f0-9-]{36}$/, { timeout: 280_000 });
     expect(page.url()).toContain(petId);
   });
 

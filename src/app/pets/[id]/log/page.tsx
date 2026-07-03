@@ -74,11 +74,11 @@ export default function LogPage() {
         setStatusMsg(CYCLING_MESSAGES[msgIndex]);
       }, 3000);
 
-      // Poll for job completion every 2s, max 50 polls (100s)
+      // Poll for job completion every 2s, max 150 polls (300s)
       pollRef.current = setInterval(async () => {
         pollCount.current += 1;
 
-        if (pollCount.current > 50) {
+        if (pollCount.current > 150) {
           clearIntervals();
           setError("Analysis is taking too long. Please try again.");
           setLoading(false);
