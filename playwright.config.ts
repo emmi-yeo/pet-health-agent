@@ -5,7 +5,8 @@ config({ path: ".env.local" });
 export default defineConfig({
   testDir: "./tests",
   testIgnore: ["**/._*"],
-  timeout: 45000,
+  timeout: 60000,
+  workers: 2,
   retries: 1,
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000",
