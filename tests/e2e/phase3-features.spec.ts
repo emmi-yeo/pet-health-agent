@@ -19,7 +19,11 @@ async function signIn(page: any) {
 
 async function getFirstPetId(page: any): Promise<string | null> {
   const petLink = page.locator('a[href^="/pets/"]').first();
-  if (await petLink.count() === 0) return null;
+  try {
+    await petLink.waitFor({ timeout: 8_000 });
+  } catch {
+    return null;
+  }
   const href = await petLink.getAttribute("href");
   return href?.split("/pets/")[1]?.split("/")[0] ?? null;
 }
