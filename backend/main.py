@@ -787,7 +787,7 @@ async def chat_about_pet(request: Request, pet_id: str, body: ChatRequest, autho
 
     chat_agent = LlmAgent(
         name="chat_agent",
-        model="gemini-2.5-flash",
+        model="gemini-2.5-flash-lite",
         instruction="""You are PawLog's pet health assistant. You have access to a pet's complete health history.
 Answer questions about the pet's health clearly and concisely. Always remind the user that you are not a replacement for veterinary advice.
 When patterns or concerns are detected, mention them. Keep answers focused and practical.""",
@@ -881,7 +881,7 @@ async def check_medication_interactions(request: Request, pet_id: str, authoriza
     from google.adk.agents import LlmAgent
     checker_agent = LlmAgent(
         name="interaction_checker",
-        model="gemini-2.5-flash",
+        model="gemini-2.5-flash-lite",
         instruction="""You are a veterinary pharmacology expert. Check the provided medications for potential interactions.
 Be concise and practical. Flag only clinically significant interactions. Always recommend consulting a vet.""",
     )
