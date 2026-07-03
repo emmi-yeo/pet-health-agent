@@ -89,8 +89,8 @@ test("complete user journey — sign in to vet summary", async ({ page, context 
 
     await page.getByRole("button", { name: /save log/i }).click();
 
-    // AI pipeline runs — waits for redirect back to pet profile (up to 90s)
-    await page.waitForURL(/\/pets\/[a-f0-9-]{36}$/, { timeout: 90_000 });
+    // AI pipeline runs — waits for redirect back to pet profile (up to 150s on Render cold start)
+    await page.waitForURL(/\/pets\/[a-f0-9-]{36}$/, { timeout: 150_000 });
     expect(page.url()).toContain(petId);
   });
 

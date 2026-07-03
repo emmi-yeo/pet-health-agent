@@ -446,7 +446,7 @@ async def email_vet_summary(
         .order("generated_at", desc=True).limit(1).execute()
 
     if not summary_result.data:
-        raise HTTPException(status_code=404, detail="No summary found for this pet")
+        return {"sent": False, "reason": "no_summary"}
 
     summary = summary_result.data[0]
     html = vet_summary_email(
