@@ -9,3 +9,4 @@ httpx
 mcp
 resend
 apscheduler
+slowapi
