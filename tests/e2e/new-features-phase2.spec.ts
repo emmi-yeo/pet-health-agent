@@ -326,7 +326,7 @@ test.describe("Medication interaction checker", () => {
 test.describe("New API endpoints — auth required (via fetch)", () => {
   test("appointments API requires auth", async ({ page }) => {
     await signIn(page);
-    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
     const res = await page.evaluate(async (apiBase) => {
       const r = await fetch(`${apiBase}/api/pets/fake-id/appointments`);
       return r.status;
@@ -336,7 +336,7 @@ test.describe("New API endpoints — auth required (via fetch)", () => {
 
   test("vaccinations API requires auth", async ({ page }) => {
     await signIn(page);
-    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
     const res = await page.evaluate(async (apiBase) => {
       const r = await fetch(`${apiBase}/api/pets/fake-id/vaccinations`);
       return r.status;
@@ -346,7 +346,7 @@ test.describe("New API endpoints — auth required (via fetch)", () => {
 
   test("chat API requires auth", async ({ page }) => {
     await signIn(page);
-    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
     const res = await page.evaluate(async (apiBase) => {
       const r = await fetch(`${apiBase}/api/pets/fake-id/chat`, {
         method: "POST",
@@ -360,7 +360,7 @@ test.describe("New API endpoints — auth required (via fetch)", () => {
 
   test("export API requires auth", async ({ page }) => {
     await signIn(page);
-    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
     const res = await page.evaluate(async (apiBase) => {
       const r = await fetch(`${apiBase}/api/pets/fake-id/export`);
       return r.status;

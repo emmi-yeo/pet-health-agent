@@ -40,7 +40,7 @@ test.describe("Smoke Tests", () => {
   });
 
   test("backend health endpoint is reachable", async ({ request }) => {
-    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
     const response = await request.get(`${base}/health`);
     expect(response.status()).toBe(200);
     const body = await response.json();

@@ -161,7 +161,7 @@ test.describe("Co-owner invite section", () => {
 
   test("co-owner endpoint returns 404 for bad token (API contract via fetch)", async ({ page }) => {
     await signIn(page);
-    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
     const res = await page.evaluate(async (apiBase) => {
       const r = await fetch(`${apiBase}/api/accept-co-owner?token=no-such-token-xyz`);
       return r.status;
@@ -226,10 +226,11 @@ test.describe("Lab results tab", () => {
     await signIn(page);
     const petId = await getFirstPetId(page);
     if (!petId) test.skip();
-    const res = await page.evaluate(async (pid) => {
-      const r = await fetch(`http://localhost:8000/api/pets/${pid}/lab-results`);
+    const apiBase = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const res = await page.evaluate(async ([pid, base]) => {
+      const r = await fetch(`${base}/api/pets/${pid}/lab-results`);
       return r.status;
-    }, petId);
+    }, [petId, apiBase] as [string, string]);
     expect(res).toBe(401);
   });
 });
@@ -239,7 +240,7 @@ test.describe("Lab results tab", () => {
 test.describe("Vet verified badge API", () => {
   test("admin verify endpoint returns 403 without secret", async ({ page }) => {
     await signIn(page);
-    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
     const res = await page.evaluate(async (apiBase) => {
       const r = await fetch(`${apiBase}/api/admin/verify-vet`, {
         method: "POST",
@@ -253,7 +254,7 @@ test.describe("Vet verified badge API", () => {
 
   test("verify status endpoint returns 401 without auth", async ({ page }) => {
     await signIn(page);
-    const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
+    const base = process.env.PLAYWRIGHT_API_URL || process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8000";
     const res = await page.evaluate(async (apiBase) => {
       const r = await fetch(`${apiBase}/api/vet/verify-status`);
       return r.status;
